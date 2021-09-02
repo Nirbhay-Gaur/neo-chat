@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { ChatEngine } from "react-chat-engine";
 import { auth } from "../firebase";
@@ -9,8 +9,6 @@ function Chats() {
   const history = useHistory();
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-
-  console.log(user);
 
   const getFile = async (url) => {
     const response = await fetch(url);
@@ -25,11 +23,11 @@ function Chats() {
       return;
     }
     axios
-      .get("https://api.chatengine.io/users/me", {
+      .get("https://api.chatengine.io/users/me/", {
         headers: {
-          "project-id": "94bda9cc-f25a-440e-9bab-da06bde2cb3b",
-          "user-name": user.email,
-          "user-secret": user.uid,
+          "Project-ID": process.env.REACT_APP_CHAT_ENGINE_PROJECT_ID,
+          "User-Name": user.email,
+          "User-Secret": user.uid,
         },
       })
       .then(() => {
@@ -38,16 +36,16 @@ function Chats() {
       .catch(() => {
         let formData = new FormData();
         formData.append("email", user.email);
-        formData.append("username", user.displayName);
+        formData.append("username", user.email);
         formData.append("secret", user.uid);
 
         getFile(user.photoURL).then((avatar) => {
           formData.append("avatar", avatar, avatar.name);
 
           axios
-            .post("https://api.chatengine.io/users", formData, {
+            .post("https://api.chatengine.io/users/", formData, {
               headers: {
-                "private-key": "45d122fd-576b-44a4-944c-0aafe40e4b1e",
+                "PRIVATE-KEY": process.env.REACT_APP_CHAT_ENGINE_PRIVATE_KEY,
               },
             })
             .then(() => {
@@ -56,14 +54,14 @@ function Chats() {
             .catch((error) => console.log(error));
         });
       });
-    return () => {};
   }, [user, history]);
 
   const handleLogout = async () => {
     await auth.signOut().then(() => history.push("/"));
   };
 
-  if (!user || loading) return "Loading...";
+  if (!user || loading)
+    return <h1 style={{ textAlign: "center" }}>Loading...</h1>;
 
   return (
     <div className="chats-page">
@@ -75,7 +73,7 @@ function Chats() {
       </div>
       <ChatEngine
         height="calc(100vh - 66px)"
-        projectID="94bda9cc-f25a-440e-9bab-da06bde2cb3b"
+        projectID={process.env.REACT_APP_CHAT_ENGINE_PROJECT_ID}
         userName={user.email}
         userSecret={user.uid}
       />

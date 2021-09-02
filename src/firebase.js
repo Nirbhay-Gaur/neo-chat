@@ -1,15 +1,14 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-// import "firebase/compat/firestore";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyACLH75h48UPZX8CMC1v7p8ltvN72yrAdk",
-  authDomain: "neo-chat-5f0c0.firebaseapp.com",
-  projectId: "neo-chat-5f0c0",
-  storageBucket: "neo-chat-5f0c0.appspot.com",
-  messagingSenderId: "211847810960",
-  appId: "1:211847810960:web:a060e2043d230a089aed15",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
